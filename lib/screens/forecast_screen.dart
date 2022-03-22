@@ -1,3 +1,4 @@
+import 'package:clima/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/services/weather.dart';
 import 'package:intl/intl.dart';
@@ -78,7 +79,8 @@ class _ForecastScreenState extends State<ForecastScreen> {
             children: <Widget>[
               Align(
                 alignment: Alignment.topLeft,
-                child: FlatButton(
+                child: ElevatedButton(
+                  style: kButtonStyle,
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -104,6 +106,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
                         child: Text(
                           listForecast[index].toString(),
                           style: TextStyle(
+                            fontFamily: 'Roboto',
                           fontSize: 25.0, // insert your font size here
                           ),
                         ),

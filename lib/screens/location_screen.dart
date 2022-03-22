@@ -77,17 +77,19 @@ class _LocationScreenState extends State<LocationScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  FlatButton(
+                  ElevatedButton(
+                    style: kButtonStyle,
                     onPressed: () async {
                       var weatherData = await weather.getLocationWeather();
                       updateUI(weatherData);
                     },
                     child: Icon(
-                      Icons.near_me,
+                      Icons.map_outlined,
                       size: 50.0,
                     ),
                   ),
-                  FlatButton(
+                  ElevatedButton(
+                    style: kButtonStyle,
                     onPressed: () {
                       getForecastData();
                     },
@@ -96,7 +98,8 @@ class _LocationScreenState extends State<LocationScreen> {
                       size: 50.0,
                     ),
                   ),
-                  FlatButton(
+                  ElevatedButton(
+                    style: kButtonStyle,
                     onPressed: () async {
                       var typedName = await Navigator.push(
                           context,
@@ -136,7 +139,6 @@ class _LocationScreenState extends State<LocationScreen> {
                 '$cityName',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
-                    fontWeight: FontWeight.bold,
                     fontSize: 40),
               ),
               SizedBox(height: 30.0),

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
+ButtonStyle kButtonStyle = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all(Colors.indigo),
+);
+
 const kTempTextStyle = TextStyle(
-  fontFamily: 'Spartan MB',
+  fontFamily: 'Roboto',
   fontSize: 60.0,
 );
 
 const kMessageTextStyle = TextStyle(
-  fontFamily: 'Spartan MB',
+  fontFamily: 'Roboto',
   fontSize: 50.0,
 );
 
 const kButtonTextStyle = TextStyle(
   fontSize: 25.0,
-  fontFamily: 'Spartan MB',
+  fontFamily: 'Roboto',
 );
 
 const kConditionTextStyle = TextStyle(
