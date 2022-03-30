@@ -6,6 +6,7 @@ import 'package:clima/screens/forecast_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_icons/weather_icons.dart';
 import 'package:clima/utilities/utility.dart';
+import 'package:intl/intl.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -18,12 +19,14 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   WeatherModel weather = WeatherModel();
-  int temperature = 0;
+  String temperature;
   IconData weatherIcon;
   String cityName;
   String weatherMessage;
   String description;
-  int humidity;
+
+  List<String> listName = [];
+  List<String> listValue = [];
 
   @override
   void initState() {
@@ -32,20 +35,43 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
+    String humidity;
+    String feelsLike;
+    int sunrise;
+    int sunset;
+
     setState(() {
       if (weatherData == null) {
-        temperature = 0;
+        temperature = '';
         weatherMessage = 'Unable to get weather data';
         cityName = '';
         return;
       }
 
-      double temp = weatherData['main']['temp'];
-      temperature = temp.toInt();
+      temperature = weatherData['main']['temp'].round().toString();
+
       var condition = weatherData['weather'][0]['id'];
       description = weatherData['weather'][0]['main'];
-      humidity = weatherData['main']['humidity'];
       cityName = weatherData['name'];
+
+      humidity = weatherData['main']['humidity'].toString();
+      feelsLike = weatherData['main']['feels_like'].round().toString();
+
+      sunrise = weatherData['sys']['sunrise'];
+      String sunriseTime = convertTime(sunrise);
+
+      sunset = weatherData['sys']['sunset'];
+      String sunsetTime = convertTime(sunset);
+
+      listName.add('Humidity');
+      listName.add('Feels Like');
+      listName.add('Sunrise');
+      listName.add('Sunset');
+
+      listValue.add(humidity + '%');
+      listValue.add(feelsLike + '°');
+      listValue.add(sunriseTime);
+      listValue.add(sunsetTime);
 
       var epochDate = weatherData['dt'];
       int hour = calcHour(epochDate);
@@ -54,6 +80,10 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
+  String convertTime(int theDate) {
+    final DateTime date0 = DateTime.fromMillisecondsSinceEpoch(theDate * 1000);
+    return DateFormat("h:mm a").format(date0);
+  }
 
   void getForecastData() async {
     var forecastData = await WeatherModel().getCityForecast(cityName);
@@ -118,7 +148,7 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 80.0),
+              SizedBox(height: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -127,31 +157,55 @@ class _LocationScreenState extends State<LocationScreen> {
                     textAlign: TextAlign.center,
                     style: kTempTextStyle,
                   ),
-                  SizedBox(width: 20.0),
+                  SizedBox(width: 10.0),
                   BoxedIcon(
                     weatherIcon,
                     size: 70.0,
                   ),
                 ],
               ),
-              SizedBox(height: 30.0),
+              SizedBox(height: 20.0),
               Text(
                 '$cityName',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                     fontSize: 40),
               ),
-              SizedBox(height: 30.0),
+              SizedBox(height: 20.0),
               Text(
                 '$description',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(fontSize: 30),
               ),
-              SizedBox(height: 10.0),
-              Text(
-                'Humidity $humidity%',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.roboto(fontSize: 30),
+              SizedBox(height: 20.0),
+              Expanded(
+                child: ListView.separated(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  itemCount: listName.length,
+                  separatorBuilder: (BuildContext context, int index) => Divider(),
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                      },
+                      title: Align(
+                          child: Text(
+                              listName[index],
+                              style: const TextStyle(
+                                fontSize: 26.0,
+                              )
+                          ),
+                          alignment: Alignment.centerLeft),
+                      trailing: Text(
+                          listValue[index].toString(),
+                          style: const TextStyle(
+                              color: Colors.yellow,
+                              fontSize: 26.0
+                          )
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    );
+                  },
+                ),
               ),
             ],
           ),
