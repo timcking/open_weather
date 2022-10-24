@@ -46,10 +46,11 @@ class _CityScreenState extends State<CityScreen> {
                   },
                 ),
               ),
-              // ignore: deprecated_member_use
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0),
+                  ),
                 ),
                 onPressed: () {
                   Navigator.pop(context, cityName);

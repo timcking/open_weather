@@ -6,7 +6,6 @@ import 'package:clima/screens/forecast_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_icons/weather_icons.dart';
 import 'package:clima/utilities/utility.dart';
-import 'package:intl/intl.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -37,8 +36,13 @@ class _LocationScreenState extends State<LocationScreen> {
   void updateUI(dynamic weatherData) {
     String humidity;
     String feelsLike;
+    String minTemp;
+    String maxTemp;
     int sunrise;
     int sunset;
+
+    listName.clear();
+    listValue.clear();
 
     setState(() {
       if (weatherData == null) {
@@ -56,6 +60,8 @@ class _LocationScreenState extends State<LocationScreen> {
 
       humidity = weatherData['main']['humidity'].toString();
       feelsLike = weatherData['main']['feels_like'].round().toString();
+      minTemp = weatherData['main']['temp_min'].round().toString();
+      maxTemp = weatherData['main']['temp_max'].round().toString();
 
       sunrise = weatherData['sys']['sunrise'];
       String sunriseTime = convertTime(sunrise);
@@ -63,26 +69,25 @@ class _LocationScreenState extends State<LocationScreen> {
       sunset = weatherData['sys']['sunset'];
       String sunsetTime = convertTime(sunset);
 
-      listName.add('Humidity');
       listName.add('Feels Like');
+      listName.add('Low');
+      listName.add('High');
+      listName.add('Humidity');
       listName.add('Sunrise');
       listName.add('Sunset');
 
-      listValue.add(humidity + '%');
       listValue.add(feelsLike + '°');
-      listValue.add(sunriseTime);
-      listValue.add(sunsetTime);
+      listValue.add(minTemp + '°');
+      listValue.add(maxTemp + '°');
+      listValue.add(humidity + '%');
+      listValue.add(sunriseTime.toLowerCase());
+      listValue.add(sunsetTime.toLowerCase());
 
       var epochDate = weatherData['dt'];
       int hour = calcHour(epochDate);
 
       weatherIcon = weather.getWeatherIcon(condition, hour);
     });
-  }
-
-  String convertTime(int theDate) {
-    final DateTime date0 = DateTime.fromMillisecondsSinceEpoch(theDate * 1000);
-    return DateFormat("h:mm a").format(date0);
   }
 
   void getForecastData() async {
@@ -114,7 +119,7 @@ class _LocationScreenState extends State<LocationScreen> {
                       updateUI(weatherData);
                     },
                     child: Icon(
-                      Icons.map_outlined,
+                      Icons.refresh,
                       size: 50.0,
                     ),
                   ),
@@ -124,20 +129,21 @@ class _LocationScreenState extends State<LocationScreen> {
                       getForecastData();
                     },
                     child: Icon(
-                      Icons.wb_sunny,
+                      // Icons.wb_sunny,
+                      Icons.sunny,
                       size: 50.0,
                     ),
                   ),
                   ElevatedButton(
                     style: kButtonStyle,
                     onPressed: () async {
-                      var typedName = await Navigator.push(
-                          context,
+                      var typedName = await Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return CityScreen();
                       }));
                       if (typedName != null) {
-                        var weatherData = await weather.getCityWeather(typedName);
+                        var weatherData =
+                            await weather.getCityWeather(typedName);
                         updateUI(weatherData);
                       }
                     },
@@ -168,8 +174,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Text(
                 '$cityName',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.roboto(
-                    fontSize: 40),
+                style: GoogleFonts.roboto(fontSize: 40),
               ),
               SizedBox(height: 20.0),
               Text(
@@ -180,29 +185,27 @@ class _LocationScreenState extends State<LocationScreen> {
               SizedBox(height: 20.0),
               Expanded(
                 child: ListView.separated(
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: listName.length,
-                  separatorBuilder: (BuildContext context, int index) => Divider(),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(),
                   itemBuilder: (context, index) {
                     return ListTile(
-                      onTap: () {
-                      },
+                      dense: true,
+                      visualDensity: VisualDensity(vertical: -3),
+                      onTap: () {},
                       title: Align(
-                          child: Text(
-                              listName[index],
+                          child: Text(listName[index],
                               style: const TextStyle(
                                 fontSize: 26.0,
-                              )
-                          ),
+                              )),
                           alignment: Alignment.centerLeft),
-                      trailing: Text(
-                          listValue[index].toString(),
+                      trailing: Text(listValue[index].toString(),
                           style: const TextStyle(
-                              color: Colors.yellow,
-                              fontSize: 26.0
-                          )
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              color: Colors.yellow, fontSize: 26.0)),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20.0),
                     );
                   },
                 ),

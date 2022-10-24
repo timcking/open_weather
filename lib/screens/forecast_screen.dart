@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:clima/services/weather.dart';
 import 'package:intl/intl.dart';
 import 'package:clima/utilities/utility.dart';
-import 'package:clima/services/weather.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 class ForecastScreen extends StatefulWidget {
   ForecastScreen({this.forecastWeather});
@@ -16,7 +14,6 @@ class ForecastScreen extends StatefulWidget {
 }
 
 class _ForecastScreenState extends State<ForecastScreen> {
-
   List<String> listForecast = [];
   List<IconData> listIcons = [];
   List<String> listDateTime = [];
@@ -33,7 +30,6 @@ class _ForecastScreenState extends State<ForecastScreen> {
     int count = forecastData['cnt'];
 
     for (int i = 0; i < count; i++) {
-
       String forecastString = '';
 
       // Datetime list
@@ -48,7 +44,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
       int condition = forecastData['list'][i]['weather'][0]['id'];
       String description = forecastData['list'][i]['weather'][0]['main'];
 
-      forecastString = temperature +  '°' + '  ' + description;
+      forecastString = temperature + '°' + '  ' + description;
       listForecast.add(forecastString);
 
       // Icon list
@@ -59,7 +55,8 @@ class _ForecastScreenState extends State<ForecastScreen> {
   }
 
   String formatDate(epochDate) {
-    DateTime localDate = new DateTime.fromMillisecondsSinceEpoch(epochDate * 1000);
+    DateTime localDate =
+        new DateTime.fromMillisecondsSinceEpoch(epochDate * 1000);
     var format = new DateFormat('E MM/dd h a');
     String myDate = format.format(localDate);
 
@@ -70,9 +67,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-            color: Colors.indigo
-        ),
+        decoration: BoxDecoration(color: Colors.indigo),
         constraints: BoxConstraints.expand(),
         child: SafeArea(
           child: Column(
@@ -94,20 +89,22 @@ class _ForecastScreenState extends State<ForecastScreen> {
               // https://stackoverflow.com/questions/52801201/flutter-renderbox-was-not-laid-out
               SizedBox(height: 10.0),
               Expanded(
-                child:  ListView.separated(
+                child: ListView.separated(
                   itemCount: listForecast.length,
-                  separatorBuilder: (BuildContext context, int index) => Divider(),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(),
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: Icon(listIcons[index],
-                          size: 60.0,
+                      leading: Icon(
+                        listIcons[index],
+                        size: 60.0,
                       ),
                       title: Align(
                         child: Text(
                           listForecast[index].toString(),
                           style: TextStyle(
                             fontFamily: 'Roboto',
-                          fontSize: 25.0, // insert your font size here
+                            fontSize: 25.0, // insert your font size here
                           ),
                         ),
                         alignment: Alignment(-0.5, 0),
